@@ -1,21 +1,23 @@
-import React, { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
-import { Bookmark, MessageCircle, MoreHorizontal, Send } from "lucide-react";
-import { Button } from "./ui/button";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import axios from "axios";
+import { Bookmark, MessageCircle, MoreHorizontal, Send } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
-import { setPosts, setSelectedPost } from "@/redux/postSlice";
-import { Badge } from "./ui/badge";
+import { FaHeart } from "react-icons/fa";
+import { FaRegHeart } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
 import CommentDialog from "../commentDialog/CommentDialog";
+import { API_END_POINT_POST } from "@/utils/db";
+import { setPosts, setSelectedPost } from "@/config/postSlice";
+import { Badge } from "@/components/ui/badge";
 
 const Post = ({ post }) => {
   const [text, setText] = useState("");
   const [open, setOpen] = useState(false);
   const { user } = useSelector((store) => store.auth);
-  const { posts } = useSelector((store) => store.post);
+  const { posts } = useSelector((store) => store.posts);
   const [liked, setLiked] = useState(post.likes.includes(user?._id) || false);
   const [postLike, setPostLike] = useState(post.likes.length);
   const [comment, setComment] = useState(post.comments);
@@ -32,9 +34,11 @@ const Post = ({ post }) => {
 
   const likeOrDislikeHandler = async () => {
     try {
-      const action = liked ? "dislike" : "like";
-      const res = await axios.get(
-        `https://instaclone-g9h5.onrender.com/api/v1/post/${post._id}/${action}`,
+      const action = liked ? "dislikepost" : "likepost";
+      console.log(action);
+      
+      const res = await axios.post(
+        `${API_END_POINT_POST}/post/${action}/${post._id}`,
         { withCredentials: true }
       );
       console.log(res.data);
@@ -65,7 +69,7 @@ const Post = ({ post }) => {
   const commentHandler = async () => {
     try {
       const res = await axios.post(
-        `https://instaclone-g9h5.onrender.com/api/v1/post/${post._id}/comment`,
+        `${API_END_POINT_POST}/post/addcomment/${post._id}`,
         { text },
         {
           headers: {
@@ -95,7 +99,7 @@ const Post = ({ post }) => {
   const deletePostHandler = async () => {
     try {
       const res = await axios.delete(
-        `https://instaclone-g9h5.onrender.com/api/v1/post/delete/${post?._id}`,
+        `${API_END_POINT_POST}/post/deletepost/${post?._id}`,
         { withCredentials: true }
       );
       if (res.data.success) {
@@ -114,7 +118,7 @@ const Post = ({ post }) => {
   const bookmarkHandler = async () => {
     try {
       const res = await axios.get(
-        `https://instaclone-g9h5.onrender.com/api/v1/post/${post?._id}/bookmark`,
+        `${API_END_POINT_POST}/post/bookmarkpost${post?._id}`,
         { withCredentials: true }
       );
       if (res.data.success) {

@@ -5,6 +5,7 @@ import axios from "axios";
 import {
   Heart,
   Home,
+  LogOut,
   MessageCircle,
   PlusSquare,
   Search,
@@ -14,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import CreatePost from "../createPost/CreatePost";
+import { useState } from "react";
 
 const LeftSidebar = () => {
   const navigate = useNavigate();
@@ -41,7 +43,7 @@ const LeftSidebar = () => {
 
   const logouthandler = async () => {
     try {
-      const res = await axios.get(`${API_END_POINT_USER}/logout`, {
+      const res = await axios.get(`${API_END_POINT_USER}/users/logout`, {
         withCredentials: true,
       });
       if (res.data.success) {
@@ -53,9 +55,12 @@ const LeftSidebar = () => {
       toast.error(error.response.data.message);
     }
   };
+ 
   const sidebarHandler = (item) => {
     if (item === "Logout") {
       logouthandler();
+    }else if(item === "Create"){
+      setOpen(true)
     }
   };
 
@@ -73,7 +78,7 @@ const LeftSidebar = () => {
               >
                 {item.icon}
                 <span>{item.text}</span>
-                {item.text === "Notifications" &&
+                {/* {item.text === "Notifications" &&
                   likeNotification.length > 0 && (
                     <Popover>
                       <PopoverTrigger asChild>
@@ -116,7 +121,7 @@ const LeftSidebar = () => {
                         </div>
                       </PopoverContent>
                     </Popover>
-                  )}
+                  )} */}
               </div>
             );
           })}
