@@ -14,6 +14,8 @@ import { setPosts, setSelectedPost } from "@/config/postSlice";
 import { Badge } from "@/components/ui/badge";
 
 const Post = ({ post }) => {
+  console.log(post.comments);
+  
   const [text, setText] = useState("");
   const [open, setOpen] = useState(false);
   const { user } = useSelector((store) => store.auth);
