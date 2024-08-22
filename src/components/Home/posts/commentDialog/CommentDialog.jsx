@@ -7,6 +7,7 @@ import { MoreHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Comment from "./comment/Comment";
 
 const CommentDialog = ({ open, setOpen }) => {
   const [text, setText] = useState("");
